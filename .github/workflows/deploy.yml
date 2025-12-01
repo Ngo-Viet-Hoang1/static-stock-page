@@ -5,6 +5,9 @@ on:
     branches:
       - main  # mỗi khi push main, workflow chạy
 
+permissions:
+  contents: write
+
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
