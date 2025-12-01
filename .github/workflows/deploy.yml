@@ -1,20 +1,27 @@
-name: Deploy Vite to GitHub Pages
+
+name: Node CI
 
 on:
   push:
     branches:
       - main
+  pull_request:
 
-# Sử dụng bun/setup-bun
 jobs:
   build:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: bun/setup-bun@v1
-        with:
-          bun-version: stable
-      - run: bun --version
-      - run: bun install
-      - run: bun run start
 
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20' # hoặc version bạn dùng
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run dev
+        run: npm run dev

@@ -59,7 +59,7 @@ const CourseDetails: React.FC = () => {
           {/* GIF Background - Abstract Stock Chart */}
           <div className="absolute inset-0 bg-black">
             <img
-              src="giphy.gif"
+              src="/static-stock-page/giphy.gif"
               alt="Stock Market Data Animation"
               className="w-full h-full object-cover opacity-80 group-hover:opacity-60 transition-opacity duration-700"
             />

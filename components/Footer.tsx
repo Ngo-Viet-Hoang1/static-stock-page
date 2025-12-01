@@ -13,7 +13,7 @@ const Footer: React.FC = () => {
             <a href="#" className="flex items-center gap-2 mb-6 block w-fit">
               {/* IMAGE LOGO */}
               <img
-                src="/logo.png"
+                src="/static-stock-page/logo.png"
                 alt="VinaStock Pro Logo"
                 className="h-10 w-auto object-contain"
               />
