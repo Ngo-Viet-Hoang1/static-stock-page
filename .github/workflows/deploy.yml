@@ -36,21 +36,17 @@ jobs:
       - name: Build project
         run: npm run build
 
-      # 5. Add .nojekyll file
-      - name: Add .nojekyll file
-        run: touch dist/.nojekyll
-
-      # 6. Setup Pages
+      # 5. Setup Pages
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      # 7. Upload artifact
+      # 6. Upload artifact
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: "./dist"
 
-      # 8. Deploy to GitHub Pages
+      # 7. Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
