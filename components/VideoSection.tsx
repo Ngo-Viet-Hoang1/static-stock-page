@@ -1,5 +1,5 @@
-import React, { useRef, useEffect, useState } from "react";
-import { Play, Pause, Volume2, VolumeX } from "lucide-react";
+import { Maximize, Pause, Play, Volume2, VolumeX } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
 import { VIDEO_SUBTITLES } from "../constants";
 
 // Helper to create a blob URL for VTT content
@@ -49,6 +49,9 @@ const VideoSection: React.FC = () => {
       {/* Background decoration */}
       <div className="absolute top-0 right-0 w-2/3 h-full bg-gradient-to-b from-slate-50/50 to-transparent dark:from-white/5 dark:to-transparent pointer-events-none"></div>
 
+      {/* Ambient Floor Glow */}
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4 h-32 bg-gold-500/20 blur-[100px] pointer-events-none"></div>
+
       <div className="container mx-auto px-6 text-center relative z-10">
         <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">
           Trải Nghiệm{" "}
@@ -59,66 +62,83 @@ const VideoSection: React.FC = () => {
           chúng tôi.
         </p>
 
-        {/* Glass Frame for Video (Bezel) */}
-        <div className="relative max-w-5xl mx-auto p-4 bg-white/20 dark:bg-white/5 backdrop-blur-xl border border-white/40 dark:border-white/10 rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15)] dark:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)]">
-          <div className="relative rounded-2xl overflow-hidden shadow-inner bg-black group">
-            <video
-              ref={videoRef}
-              className="w-full h-auto object-cover bg-black aspect-video"
-              poster="https://picsum.photos/1200/675?blur=2"
-              playsInline
-              loop
-              crossOrigin="anonymous"
-            >
-              {/* <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4" type="video/mp4" /> */}
-              <source src="/static-stock-page/video.mp4" type="video/mp4" />
+        {/* === PREMIUM VIDEO CONTAINER === */}
+        <div className="relative max-w-5xl mx-auto group">
+          {/* 1. Ambient Glow Behind (Static) */}
+          <div className="absolute -inset-1 bg-gradient-to-r from-gold-500 to-yellow-600 rounded-[2rem] blur opacity-20 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
 
-              {trackUrl && (
-                <track
-                  label="Vietnamese"
-                  kind="subtitles"
-                  srcLang="vi"
-                  src={trackUrl}
-                  default
-                />
-              )}
-            </video>
+          {/* 2. Rotating Gradient Border (Animated) */}
+          <div className="absolute -inset-[2px] rounded-[2rem] overflow-hidden">
+            <div className="absolute inset-[-50%] bg-[conic-gradient(from_0deg,transparent_0deg,#EAB308_90deg,transparent_180deg)] animate-spin-slow opacity-70 dark:opacity-100"></div>
+          </div>
 
-            {/* Custom Controls Overlay */}
-            <div
-              className={`absolute inset-0 flex items-center justify-center bg-black/40 transition-opacity duration-300 ${
-                isPlaying ? "opacity-0 group-hover:opacity-100" : "opacity-100"
-              }`}
-            >
-              <button
-                onClick={togglePlay}
-                className="w-24 h-24 bg-white/10 backdrop-blur-md border border-white/30 rounded-full flex items-center justify-center transition-all hover:scale-110 hover:bg-white/20 group-hover:shadow-[0_0_30px_rgba(255,255,255,0.2)]"
+          {/* 3. Main Glass Frame */}
+          <div className="relative p-2 bg-white dark:bg-slate-900 rounded-[2rem] overflow-hidden border border-slate-200 dark:border-white/10 shadow-2xl">
+            <div className="relative rounded-[1.5rem] overflow-hidden bg-black group/video aspect-video">
+              <video
+                ref={videoRef}
+                className="w-full h-full object-cover bg-black"
+                poster="https://picsum.photos/1200/675?blur=2"
+                playsInline
+                loop
+                crossOrigin="anonymous"
               >
-                {isPlaying ? (
-                  <Pause className="text-white fill-current" size={32} />
-                ) : (
-                  <Play className="text-white fill-current ml-2" size={32} />
+                <source src="/static-stock-page/video.mp4" type="video/mp4" />
+
+                {trackUrl && (
+                  <track
+                    label="Vietnamese"
+                    kind="subtitles"
+                    srcLang="vi"
+                    src={trackUrl}
+                    default
+                  />
                 )}
-              </button>
-            </div>
+              </video>
 
-            <div className="absolute bottom-6 right-6 z-10">
-              <button
-                onClick={toggleMute}
-                className="p-3 bg-black/40 backdrop-blur-md border border-white/10 rounded-full text-white hover:bg-white/20 transition-colors"
+              {/* Custom Controls Overlay */}
+              <div
+                className={`absolute inset-0 flex items-center justify-center bg-black/40 transition-opacity duration-300 ${
+                  isPlaying
+                    ? "opacity-0 group-hover/video:opacity-100"
+                    : "opacity-100"
+                }`}
               >
-                {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
-              </button>
-            </div>
+                {/* Play Button with Pulse Effect */}
+                <button onClick={togglePlay} className="relative group/btn">
+                  <div className="absolute inset-0 bg-gold-500 rounded-full blur opacity-0 group-hover/btn:opacity-50 animate-pulse transition-opacity"></div>
+                  <div className="relative w-24 h-24 bg-white/10 backdrop-blur-md border border-white/30 rounded-full flex items-center justify-center transition-all hover:scale-110 hover:bg-white/20 shadow-2xl">
+                    {isPlaying ? (
+                      <Pause className="text-white fill-current" size={32} />
+                    ) : (
+                      <Play
+                        className="text-white fill-current ml-2"
+                        size={32}
+                      />
+                    )}
+                  </div>
+                </button>
+              </div>
 
-            {/* Scanline overlay for tech feel */}
-            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/diagmonds-light.png')] opacity-10 pointer-events-none"></div>
+              {/* Bottom Controls Bar */}
+              <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent flex justify-end gap-4 opacity-0 group-hover/video:opacity-100 transition-opacity duration-300">
+                <button
+                  onClick={toggleMute}
+                  className="p-2 hover:bg-white/20 rounded-full text-white transition-colors"
+                >
+                  {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+                </button>
+                <button className="p-2 hover:bg-white/20 rounded-full text-white transition-colors">
+                  <Maximize size={20} />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
-        <p className="mt-6 text-sm text-slate-500 dark:text-gray-500 italic">
-          * Video có phụ đề tiếng Việt. Bấm vào icon âm thanh để nghe
-          Voice-over.
+        <p className="mt-8 text-sm text-slate-500 dark:text-gray-500 italic flex items-center justify-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+          Video có phụ đề tiếng Việt & Âm thanh vòm Dolby
         </p>
       </div>
     </section>
